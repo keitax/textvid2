@@ -1,0 +1,8 @@
+scratch*
+Gemfile.lock
+out/
+*.iml
+vendor/
+temp-db/
+.bundle
+.idea/
