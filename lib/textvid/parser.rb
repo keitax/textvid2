@@ -37,7 +37,7 @@ module Textvid
         when OL_ITEM_RE
           push('<ol>')
           while peek && OL_ITEM_RE =~ peek
-            body = line.slice(OL_ITEM_RE, 2)
+            body = peek.slice(OL_ITEM_RE, 2)
             push("<li>#{inline(body)}</li>")
             inc
           end

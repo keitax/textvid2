@@ -77,6 +77,27 @@ EXPECTED
     assert_equal(expected, Parser.parse(input))
   end
 
+  def test_ordered_items
+    input = <<INPUT
+1. hello
+2. world
+
+  1. hello
+  2. world
+INPUT
+    expected = <<EXPECTED
+<ol>
+<li>hello</li>
+<li>world</li>
+</ol>
+<ol>
+<li>hello</li>
+<li>world</li>
+</ol>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
   def test_escape
     input = 'hello & world'
     expected = <<EXPECTED
