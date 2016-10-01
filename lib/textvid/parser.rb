@@ -1,3 +1,5 @@
+require 'erb'
+
 module Textvid
   class Parser
     def self.parse(body)
@@ -17,51 +19,61 @@ module Textvid
 
     def parse(body)
       @lines = body.lines.map(&:strip)
-      while line = @lines[@pos]
-        case line
+      while peek
+        case peek
         when HN_RE
-          level = line.slice(HN_RE, 1).length
-          body = line.slice(HN_RE, 2)
-          @buf.push("<h#{level}>#{body}</h#{level}>")
-          @pos += 1
+          level = peek.slice(HN_RE, 1).length
+          body = peek.slice(HN_RE, 2)
+          push("<h#{level}>#{inline(body)}</h#{level}>")
+          inc
         when UL_ITEM_RE
-          @buf.push('<ul>')
-          line = @lines[@pos]
-          while line && UL_ITEM_RE =~ line
-            body = line.slice(UL_ITEM_RE, 2)
-            @buf.push("<li>#{body}</li>")
-            @pos += 1
-            line = @lines[@pos]
+          push('<ul>')
+          while peek && UL_ITEM_RE =~ peek
+            body = peek.slice(UL_ITEM_RE, 2)
+            push("<li>#{inline(body)}</li>")
+            inc
           end
-          @buf.push('</ul>')
+          push('</ul>')
         when OL_ITEM_RE
-          @buf.push('<ol>')
-          line = @lines[@pos]
-          while line && OL_ITEM_RE =~ line
+          push('<ol>')
+          while peek && OL_ITEM_RE =~ peek
             body = line.slice(OL_ITEM_RE, 2)
-            @buf.push("<li>#{body}</li>")
-            @pos += 1
-            line = @lines[@pos]
+            push("<li>#{inline(body)}</li>")
+            inc
           end
-          @buf.push('</ol>')
+          push('</ol>')
         when BLANK_RE
-          @pos += 1
+          inc
         else
-          @buf.push('<p>')
-          line = @lines[@pos]
-          while line && p_line?(line)
-            @buf.push(line)
-            @pos += 1
-            line = @lines[@pos]
+          push('<p>')
+          while peek && p_line?(peek)
+            push(inline(peek))
+            inc
           end
-          @buf.push('</p>')
+          push('</p>')
         end
       end
-      @buf.push('')
+      push('')
       @buf.join("\n")
     end
 
     private
+
+    EMPHASIS_RE = /\*(.+?)\*/
+    STRONG_RE = /\*\*(.+?)\*\*/
+    INLINE_CODE_RE = /`(.+?)`/
+    LINK_RE = /\[(.+?)\]\((.+?)\)/
+    IMAGE_RE = /!\[(.+?)\]\((.+?)\)/
+
+    def inline(text)
+      t = ERB::Util.h(text)
+      t = t.gsub(STRONG_RE, '<strong>\1</strong>')
+      t = t.gsub(EMPHASIS_RE, '<em>\1</em>')
+      t = t.gsub(INLINE_CODE_RE, '<pre><code>\1</code></pre>')
+      t = t.gsub(IMAGE_RE, '<img alt="\1" src="\2">')
+      t = t.gsub(LINK_RE, '<a href="\2">\1</a>')
+      t
+    end
 
     def p_line?(line)
       [
@@ -72,6 +84,18 @@ module Textvid
       ].all? { |re|
         re !~ line
       }
+    end
+
+    def peek
+      @lines[@pos]
+    end
+
+    def push(line)
+      @buf.push(line)
+    end
+
+    def inc
+      @pos += 1
     end
   end
 end

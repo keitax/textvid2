@@ -76,4 +76,63 @@ INPUT
 EXPECTED
     assert_equal(expected, Parser.parse(input))
   end
+
+  def test_escape
+    input = 'hello & world'
+    expected = <<EXPECTED
+<p>
+hello &amp; world
+</p>
+EXPECTED
+  end
+
+  def test_inline_em
+    input = 'hello, *world*!'
+    expected = <<EXPECTED
+<p>
+hello, <em>world</em>!
+</p>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
+  def test_inline_strong
+    input = 'hello, **world**!'
+    expected = <<EXPECTED
+<p>
+hello, <strong>world</strong>!
+</p>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
+  def test_inline_code
+    input = 'hello, `world`!'
+    expected = <<EXPECTED
+<p>
+hello, <pre><code>world</code></pre>!
+</p>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
+  def test_inline_link
+    input = 'url: [hello, world](http://hello-world/)'
+    expected = <<EXPECTED
+<p>
+url: <a href="http://hello-world/">hello, world</a>
+</p>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
+  def test_inline_image
+    input = 'image: ![Image](http://hello-world/image.jpg)'
+    expected = <<EXPECTED
+<p>
+image: <img alt="Image" src="http://hello-world/image.jpg">
+</p>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
 end
