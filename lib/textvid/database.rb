@@ -4,7 +4,7 @@ require 'textvid/entity'
 
 module Textvid
   class Database
-    Query = Struct.new(:words, :labels, :start, :results)
+    Query = Struct.new(:words, :label, :start, :results)
 
     def self.create(db_dir)
       Dir.mkdir(db_dir) unless Dir.exist?(db_dir)
