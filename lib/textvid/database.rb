@@ -24,6 +24,7 @@ module Textvid
       p.created_at = h['created_at']
       p.updated_at = h['updated_at']
       p.title = h['title']
+      p.url_title = h['url_title']
       p.body = h['body']
       p.labels = h['labels']
       p
@@ -48,6 +49,7 @@ module Textvid
           'created_at' => post.created_at,
           'updated_at' => post.updated_at,
           'title' => post.title,
+          'url_title' => post.url_title,
           'body' => post.body,
           'labels' => post.labels
       }

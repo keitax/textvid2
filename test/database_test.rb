@@ -55,6 +55,7 @@ class DatabaseTest < Minitest::Test
     p = Post.new
     p.id = 10
     p.title = 'hello'
+    p.url_title = 'hello-world'
     p.body = 'hello, world'
     p.labels = %w(a b)
     p.created_at = Time.now
@@ -64,6 +65,7 @@ class DatabaseTest < Minitest::Test
     updated = @database.get(10)
     assert_equal(p.id, updated.id)
     assert_equal(p.title, updated.title)
+    assert_equal(p.url_title, updated.url_title)
     assert_equal(p.body, updated.body)
     assert_equal(p.labels, updated.labels)
     assert_equal(p.created_at, updated.created_at)
