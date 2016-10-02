@@ -44,15 +44,15 @@ module Textvid
           end
           out_ln('</ol>')
         when CODE_RE
-          out_ln('<pre>')
-          out_ln('<code>')
+          out('<pre><code>')
+          buf = []
           while peek && CODE_RE =~ peek
             body = peek.slice(CODE_RE, 1)
-            out_ln(ERB::Util.h(body))
+            buf.push(body)
             inc
           end
-          out_ln('</code>')
-          out_ln('</pre>')
+          out(ERB::Util.h(buf.join("\n")))
+          out_ln('</code></pre>')
         when BLANK_RE
           inc
         else
@@ -103,7 +103,7 @@ module Textvid
     end
 
     def out(text)
-      @buf.write(line)
+      @buf.write(text)
     end
 
     def out_ln(line)

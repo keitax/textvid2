@@ -106,17 +106,9 @@ EXPECTED
     hello, world
 INPUT
     expected = <<EXPECTED
-<pre>
-<code>
-hello
-world
-</code>
-</pre>
-<pre>
-<code>
-hello, world
-</code>
-</pre>
+<pre><code>hello
+world</code></pre>
+<pre><code>hello, world</code></pre>
 EXPECTED
     assert_equal(expected, Parser.parse(input))
   end
