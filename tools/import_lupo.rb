@@ -26,6 +26,6 @@ lupo_db.execute(query) do |row|
   p.updated_at = Time.parse(modified_at)
   p.title = title
   p.body = body
-  p.labels = []
+  p.labels = ['Old Post']
   tv_db.insert(p)
 end
