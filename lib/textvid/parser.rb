@@ -16,9 +16,10 @@ module Textvid
     UL_ITEM_RE = /^( *)[\-\+\*] +(.+)$/
     OL_ITEM_RE = /^( *)\d+\. +(.+)$/
     BLANK_RE = /^\s*$/
+    CODE_RE = /^ {4}(.+)$/
 
     def parse(body)
-      @lines = body.lines.map(&:strip)
+      @lines = body.lines
       while peek
         case peek
         when HN_RE
@@ -42,12 +43,22 @@ module Textvid
             inc
           end
           push('</ol>')
+        when CODE_RE
+          push('<pre>')
+          push('<code>')
+          while peek && CODE_RE =~ peek
+            body = peek.slice(CODE_RE, 1)
+            push(ERB::Util.h(body))
+            inc
+          end
+          push('</code>')
+          push('</pre>')
         when BLANK_RE
           inc
         else
           push('<p>')
           while peek && p_line?(peek)
-            push(inline(peek))
+            push(inline(peek.strip))
             inc
           end
           push('</p>')
@@ -80,7 +91,8 @@ module Textvid
           HN_RE,
           UL_ITEM_RE,
           OL_ITEM_RE,
-          BLANK_RE
+          BLANK_RE,
+          CODE_RE
       ].all? { |re|
         re !~ line
       }

@@ -29,7 +29,7 @@ EXPECTED
   def test_parse_paragraph
     input = <<INPUT
 hello, world
-    bye, world
+   bye, world
 hellobye, world
 INPUT
     expected = <<EXPECTED
@@ -94,6 +94,29 @@ INPUT
 <li>hello</li>
 <li>world</li>
 </ol>
+EXPECTED
+    assert_equal(expected, Parser.parse(input))
+  end
+
+  def test_parse_code
+    input = <<INPUT
+    hello
+    world
+
+    hello, world
+INPUT
+    expected = <<EXPECTED
+<pre>
+<code>
+hello
+world
+</code>
+</pre>
+<pre>
+<code>
+hello, world
+</code>
+</pre>
 EXPECTED
     assert_equal(expected, Parser.parse(input))
   end
