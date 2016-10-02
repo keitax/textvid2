@@ -3,6 +3,7 @@ require 'minitest/autorun'
 
 require 'textvid/entity'
 require 'textvid/database'
+require 'textvid/query'
 
 class DatabaseTest < Minitest::Test
   include Textvid
@@ -28,7 +29,7 @@ class DatabaseTest < Minitest::Test
       @database.insert(p)
     end
 
-    q = Database::Query.new
+    q = Query.new
     q.start = 1
     q.results = 2
     ps = @database.select(q)

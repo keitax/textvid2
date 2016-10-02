@@ -3,6 +3,7 @@ require 'uri'
 
 require 'textvid/database'
 require 'textvid/entity'
+require 'textvid/query'
 require 'textvid/router'
 
 class RouterTest < Minitest::Test
@@ -26,10 +27,10 @@ class RouterTest < Minitest::Test
   end
 
   def test_post_list_url
-    nil_query = Database::Query.new
+    nil_query = Query.new
     assert_equal(URI('http://localhost:8000/root/posts/'), @router.post_list_url(nil_query))
 
-    specified_query = Database::Query.new
+    specified_query = Query.new
     specified_query.label = 'text vid'
     specified_query.start = 1
     specified_query.results = 2
