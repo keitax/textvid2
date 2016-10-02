@@ -41,18 +41,16 @@ class DatabaseTest < Minitest::Test
     p.title = 'hello'
     p.body = 'hello, word'
     p.labels = %w(a b c)
+    p.created_at = Time.local(2016, 1, 1)
+    p.updated_at = Time.local(2016, 12, 31)
 
-    before_insert_t = Time.now
     @database.insert(p) # id=1
     assert_equal(1, p.id, 'the post id is set')
-    assert(before_insert_t < p.created_at && p.created_at < Time.now)
-    assert(before_insert_t < p.updated_at && p.updated_at < Time.now)
 
     @database.insert(p) # id=2
     @database.insert(p) # id=3
     p3 = @database.get(3)
     assert_equal(3, p3.id)
-    assert_equal(%w(a b c), p3.labels)
   end
 
   def test_update
@@ -62,8 +60,8 @@ class DatabaseTest < Minitest::Test
     p.url_title = 'hello-world'
     p.body = 'hello, world'
     p.labels = %w(a b)
-    p.created_at = Time.now
-    p.updated_at = p.created_at
+    p.created_at = Time.local(2016, 1, 1)
+    p.updated_at = Time.local(2016, 12, 31)
 
     @database.update(p)
     updated = @database.get(10)
@@ -73,7 +71,7 @@ class DatabaseTest < Minitest::Test
     assert_equal(p.body, updated.body)
     assert_equal(p.labels, updated.labels)
     assert_equal(p.created_at, updated.created_at)
-    assert(p.created_at < p.updated_at && p.updated_at < Time.now)
+    assert_equal(p.updated_at, updated.updated_at)
   end
 
   def test_delete

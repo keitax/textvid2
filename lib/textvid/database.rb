@@ -38,12 +38,10 @@ module Textvid
     def insert(post)
       last_post_id = saved_post_ids.first || 0
       post.id = last_post_id + 1
-      post.created_at = Time.now
       update(post)
     end
 
     def update(post)
-      post.updated_at = Time.now
       h = {
           'id' => post.id,
           'created_at' => post.created_at,
