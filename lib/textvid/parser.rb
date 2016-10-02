@@ -9,7 +9,7 @@ module Textvid
     def initialize
       @lines = []
       @pos = 0
-      @buf = []
+      @buf = StringIO.new
     end
 
     HN_RE = /^(\#+) *(.+)$/
@@ -25,47 +25,47 @@ module Textvid
         when HN_RE
           level = peek.slice(HN_RE, 1).length
           body = peek.slice(HN_RE, 2)
-          push("<h#{level}>#{inline(body)}</h#{level}>")
+          out_ln("<h#{level}>#{inline(body)}</h#{level}>")
           inc
         when UL_ITEM_RE
-          push('<ul>')
+          out_ln('<ul>')
           while peek && UL_ITEM_RE =~ peek
             body = peek.slice(UL_ITEM_RE, 2)
-            push("<li>#{inline(body)}</li>")
+            out_ln("<li>#{inline(body)}</li>")
             inc
           end
-          push('</ul>')
+          out_ln('</ul>')
         when OL_ITEM_RE
-          push('<ol>')
+          out_ln('<ol>')
           while peek && OL_ITEM_RE =~ peek
             body = peek.slice(OL_ITEM_RE, 2)
-            push("<li>#{inline(body)}</li>")
+            out_ln("<li>#{inline(body)}</li>")
             inc
           end
-          push('</ol>')
+          out_ln('</ol>')
         when CODE_RE
-          push('<pre>')
-          push('<code>')
+          out_ln('<pre>')
+          out_ln('<code>')
           while peek && CODE_RE =~ peek
             body = peek.slice(CODE_RE, 1)
-            push(ERB::Util.h(body))
+            out_ln(ERB::Util.h(body))
             inc
           end
-          push('</code>')
-          push('</pre>')
+          out_ln('</code>')
+          out_ln('</pre>')
         when BLANK_RE
           inc
         else
-          push('<p>')
+          out_ln('<p>')
           while peek && p_line?(peek)
-            push(inline(peek.strip))
+            out_ln(inline(peek.strip))
             inc
           end
-          push('</p>')
+          out_ln('</p>')
         end
       end
-      push('')
-      @buf.join("\n")
+      @buf.rewind
+      @buf.read
     end
 
     private
@@ -102,8 +102,13 @@ module Textvid
       @lines[@pos]
     end
 
-    def push(line)
-      @buf.push(line)
+    def out(text)
+      @buf.write(line)
+    end
+
+    def out_ln(line)
+      @buf.write(line)
+      @buf.write("\n")
     end
 
     def inc
