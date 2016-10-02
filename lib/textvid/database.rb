@@ -30,7 +30,9 @@ module Textvid
       p
     end
 
-    def select(start: 0, results: 5)
+    def select(query)
+      start = query.start || 0
+      results = query.results || 5
       post_ids = saved_post_ids[start...start + results]
       post_ids.map { |id| get(id) }
     end

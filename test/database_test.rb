@@ -28,7 +28,10 @@ class DatabaseTest < Minitest::Test
       @database.insert(p)
     end
 
-    ps = @database.select(start: 1, results: 2)
+    q = Database::Query.new
+    q.start = 1
+    q.results = 2
+    ps = @database.select(q)
     assert_equal([4, 3], ps.map(&:id))
   end
 
