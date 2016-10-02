@@ -1,0 +1,45 @@
+@charset "utf-8";
+@import "normalize.css";
+
+body {
+    font-family: sans-serif;
+    background: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+}
+
+.container {
+    width: 75%;
+    padding: 0 2rem;
+    border-style: solid;
+    border-color: #ccc;
+    border-width: 0 1pt;
+    background: #fff;
+}
+
+.site-header__title {
+    color: #999;
+}
+
+.post {
+    margin: 2rem 0;
+}
+
+.post__title {
+    font-size: large;
+}
+
+.post__footer {
+    border-top: solid 1pt #ccc;
+    margin-top: 2rem;
+    padding: 0.5rem;
+    text-align: right;
+    color: #666;
+}
+
+.post pre {
+    border: solid 1pt #ccc;
+    padding: 1rem;
+}
