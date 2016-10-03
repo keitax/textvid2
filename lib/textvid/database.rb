@@ -29,9 +29,13 @@ module Textvid
     end
 
     def select(query)
+      candidate_ids = saved_post_ids
+      if query.year && query.month
+        candidate_ids = filter_by_month(candidate_ids, query.year, query.month)
+      end
       start = query.start || 0
       results = query.results || 5
-      post_ids = saved_post_ids[start...start + results]
+      post_ids = candidate_ids[start...start + results]
       post_ids.map { |id| get(id) }
     end
 
@@ -61,6 +65,46 @@ module Textvid
     end
 
     private
+
+    def filter_by_month(post_ids, year, month)
+      target_month = [year, month]
+
+      from_l = 0
+      from_r = post_ids.length
+      while from_l < from_r
+        pivot = (from_l + from_r) / 2
+        post = get(post_ids[pivot])
+        pivot_month = [post.created_at.year, post.created_at.month]
+        if (pivot_month <=> target_month) > 0
+          from_l = pivot + 1
+        else
+          from_r = pivot
+        end
+      end
+      from = from_l
+
+      to_l = from
+      to_r = post_ids.length
+      while to_l < to_r
+        pivot = (to_l + to_r) / 2
+        post = get(post_ids[pivot])
+        pivot_month = [post.created_at.year, post.created_at.month]
+        if (pivot_month <=> target_month) < 0
+          to_r = pivot
+        else
+          to_l = pivot + 1
+        end
+      end
+      to = to_r
+
+      post_ids[from...to]
+    end
+
+    def filter_by_url_title(post_ids, url_title)
+      post_ids.select { |id|
+        get(id).url_title == url_title
+      }
+    end
 
     def saved_post_ids
       post_filenames = Dir.new(@db_dir).entries.select { |entry| /\d+/ =~ entry }

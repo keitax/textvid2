@@ -36,6 +36,36 @@ class DatabaseTest < Minitest::Test
     assert_equal([4, 3], ps.map(&:id))
   end
 
+  def test_select_by_month
+    5.times do |i|
+      p = Post.new
+      p.title = "Title #{i}"
+      p.created_at = Time.local(2016, 1, i + 1)
+      @database.insert(p)
+    end
+    5.times do |i|
+      p = Post.new
+      p.title = "Title #{i}"
+      p.created_at = Time.local(2016, 2, i + 1)
+      @database.insert(p)
+    end
+    5.times do |i|
+      p = Post.new
+      p.title = "Title #{i}"
+      p.created_at = Time.local(2016, 3, i + 1)
+      @database.insert(p)
+    end
+    q = Query.new
+    q.start = 0
+    q.results = 999
+    q.year = 2016
+    q.month = 2
+    results = @database.select(q)
+    assert_equal(5, results.size)
+    assert_equal(2, results.first.created_at.month)
+    assert_equal(2, results.last.created_at.month)
+  end
+
   def test_insert
     p = Post.new
     p.title = 'hello'
