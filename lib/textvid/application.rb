@@ -24,7 +24,7 @@ module Textvid
 
     def default_query
       q = Query.new
-      q.start = 0
+      q.start = 1
       q.results = POSTS_PER_PAGE
       q
     end

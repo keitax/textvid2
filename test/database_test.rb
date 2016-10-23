@@ -30,7 +30,7 @@ class DatabaseTest < Minitest::Test
     end
 
     q = Query.new
-    q.start = 1
+    q.start = 2
     q.results = 2
     ps = @database.select(q)
     assert_equal([4, 3], ps.map(&:id))
@@ -56,7 +56,7 @@ class DatabaseTest < Minitest::Test
       @database.insert(p)
     end
     q = Query.new
-    q.start = 0
+    q.start = 1
     q.results = 999
     q.year = 2016
     q.month = 2
