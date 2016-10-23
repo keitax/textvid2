@@ -23,6 +23,7 @@ INPUT
 <h5>h5</h5>
 <h6>h6</h6>
 EXPECTED
+
     assert_equal(expected, Parser.parse(input))
   end
 
@@ -120,6 +121,7 @@ EXPECTED
 hello &amp; world
 </p>
 EXPECTED
+    assert_equal(expected, Parser.parse(input))
   end
 
   def test_inline_em
