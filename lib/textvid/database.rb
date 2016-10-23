@@ -33,6 +33,9 @@ module Textvid
       if query.year && query.month
         candidate_ids = filter_by_month(candidate_ids, query.year, query.month)
       end
+      if query.url_title
+        candidate_ids = filter_by_url_title(candidate_ids, query.url_title)
+      end
       start = query.start || 0
       results = query.results || 5
       post_ids = candidate_ids[start...(start + results)]

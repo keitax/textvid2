@@ -66,6 +66,22 @@ class DatabaseTest < Minitest::Test
     assert_equal(2, results.last.created_at.month)
   end
 
+  def test_select_by_url_title
+    3.times do |i|
+      p = Post.new
+      p.title = "Post #{i}"
+      p.url_title = "post-#{i}"
+      @database.insert(p)
+    end
+
+    q = Query.new
+    q.url_title = 'post-1'
+    results = @database.select(q)
+    assert_equal(1, results.size)
+    assert_equal('Post 1', results.first.title)
+    assert_equal('post-1', results.first.url_title)
+  end
+
   def test_insert
     p = Post.new
     p.title = 'hello'
