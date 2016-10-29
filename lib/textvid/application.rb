@@ -26,6 +26,7 @@ module Textvid
         redirect to(router.post_url(post).path)
       elsif post
         @post = post
+        @newer_post, @older_post = database.get_neighbors(@post.id)
         erb :post
       else
         pass
@@ -43,6 +44,7 @@ module Textvid
       posts = database.select(q)
       unless posts.empty?
         @post = posts.first
+        @newer_post, @older_post = database.get_neighbors(@post.id)
         erb :post
       end
     end

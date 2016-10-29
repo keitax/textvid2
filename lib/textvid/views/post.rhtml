@@ -25,6 +25,14 @@
         <%= h @post.created_at %>
       </footer>
     </article>
+    <nav class="neighbors">
+      <% if @newer_post %>
+          Newer: <a href="<%= h router.post_url(@newer_post) %>"><%= h @newer_post.title %></a>
+      <% end %>
+      <% if @older_post %>
+          Older: <a href="<%= h router.post_url(@older_post) %>"><%= h @older_post.title %></a>
+      <% end %>
+    </nav>
   </main>
   <footer class="site-footer"></footer>
 </div>
