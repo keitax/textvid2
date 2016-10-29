@@ -1,4 +1,6 @@
-require 'yaml'
+require 'dbm'
+require 'json'
+require 'time'
 
 require 'textvid/entity'
 
@@ -6,21 +8,22 @@ module Textvid
   class Database
     def self.create(db_dir)
       Dir.mkdir(db_dir) unless Dir.exist?(db_dir)
-      Database.new(db_dir)
+      dbm = DBM.new("#{db_dir}/posts", 0644, DBM::WRCREAT)
+      Database.new(dbm)
     end
 
-    def initialize(db_dir)
-      @db_dir = db_dir
+    def initialize(dbm)
+      @dbm = dbm
     end
 
     def get(id)
-      path = post_path(id)
-      return nil unless File.exist?(path)
-      h = YAML.load_file(post_path(id))
+      json = @dbm[id.to_s]
+      return nil unless json
+      h = JSON.parse(json)
       p = Post.new
       p.id = id
-      p.created_at = h['created_at']
-      p.updated_at = h['updated_at']
+      p.created_at = Time.iso8601(h['created_at']) if h['created_at']
+      p.updated_at = Time.iso8601(h['updated_at']) if h['updated_at']
       p.title = h['title']
       p.url_title = h['url_title']
       p.body = h['body']
@@ -51,20 +54,18 @@ module Textvid
     def update(post)
       h = {
           'id' => post.id,
-          'created_at' => post.created_at,
-          'updated_at' => post.updated_at,
+          'created_at' => post.created_at&.iso8601,
+          'updated_at' => post.updated_at&.iso8601,
           'title' => post.title,
           'url_title' => post.url_title,
           'body' => post.body,
           'labels' => post.labels
       }
-      File.open(post_path(post.id), 'w') do |f|
-        f.write(YAML.dump(h))
-      end
+      @dbm[post.dbm_key] = h.to_json
     end
 
     def delete(post)
-      File.delete(post_path(post.id))
+      @dbm.delete(post.dbm_key)
     end
 
     private
@@ -110,12 +111,7 @@ module Textvid
     end
 
     def saved_post_ids
-      post_filenames = Dir.new(@db_dir).entries.select { |entry| /\d+/ =~ entry }
-      post_filenames.map(&:to_i).sort { |l, r| r <=> l }
-    end
-
-    def post_path(id)
-      File.join(@db_dir, id.to_s)
+      @dbm.keys.map(&:to_i).sort { |l, r| r <=> l }
     end
   end
 end
