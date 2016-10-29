@@ -14,22 +14,22 @@
   </header>
   <main class="site-main">
     <div class="post-list">
-    <% @posts.each do |post| %>
-      <article class="post">
-        <header class="post__header">
-          <p class="post__created-on"><%= h post.created_at.strftime('%B %e, %Y') %></p>
-          <h1 class="post__title"><a href="<%= h router.post_url(post) %>"><%= h post.title %></a></h1>
-        </header>
-        <%= post.rendered_body %>
-        <footer class="post__footer">
-          Labels:
-        <% post.labels.each do |label| %>
-          <a href=""><%= h label %></a>
-        <% end %>
-          <%= h post.created_at %>
-        </footer>
-      </article>
-    <% end %>
+      <% @posts.each do |post| %>
+          <article class="post">
+            <header class="post__header">
+              <p class="post__created-on"><%= h post.created_at.strftime('%B %e, %Y') %></p>
+              <h1 class="post__title"><a href="<%= h router.post_url(post) %>"><%= h post.title %></a></h1>
+            </header>
+            <%= post.rendered_body %>
+            <footer class="post__footer">
+              Labels:
+              <% post.labels.each do |label| %>
+                  <a href=""><%= h label %></a>
+              <% end %>
+              <%= h post.created_at %>
+            </footer>
+          </article>
+      <% end %>
     </div>
   </main>
   <footer class="site-footer"></footer>
