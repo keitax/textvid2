@@ -20,6 +20,18 @@ module Textvid
       erb :index
     end
 
+    get '/posts/:id' do
+      post = database.get(params[:id].to_i)
+      if post && post.url_title
+        redirect to(router.post_url(post).path)
+      elsif post
+        @post = post
+        erb :post
+      else
+        pass
+      end
+    end
+
     get /(\d{4})\/(\d{2})\/(.+)\.html/ do
       year_param, month_param, url_title = params['captures']
       q = Query.new
