@@ -6,7 +6,7 @@ require 'textvid/database'
 require 'textvid/query'
 
 module Textvid
-  class Application < Sinatra::Base
+  Application = Sinatra.new {
     include ERB::Util
 
     extend Forwardable
@@ -55,5 +55,5 @@ module Textvid
       q.results = POSTS_PER_PAGE
       q
     end
-  end
+  }
 end
