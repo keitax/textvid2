@@ -3,12 +3,14 @@
 <head>
   <base href="<%= h settings.base_url %>">
   <link rel="stylesheet" href="textvid.css">
-  <title><%= h settings.site_title %></title>
+  <title><%= h @post.title %> - <%= h settings.site_title %></title>
 </head>
 <body>
 <div class="container">
   <header class="site-header">
-    <h1 class="site-header__title"><%= h settings.site_title %></h1>
+    <h1>
+      <a class="site-header__title" href="<%= h router.root_url %>"><%= h settings.site_title %></a>
+    </h1>
   </header>
   <main class="site-main">
     <article class="post">

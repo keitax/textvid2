@@ -21,6 +21,7 @@ body {
 
 .site-header__title {
     color: #999;
+    text-decoration: none;
 }
 
 .post {
