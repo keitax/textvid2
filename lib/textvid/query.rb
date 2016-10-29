@@ -1,3 +1,5 @@
 module Textvid
-  Query = Struct.new(:words, :label, :start, :results, :year, :month, :url_title)
+  class Query
+    attr_accessor :words, :label, :start, :results, :year, :month, :url_title
+  end
 end
