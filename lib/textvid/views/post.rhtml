@@ -28,12 +28,24 @@
       </footer>
     </article>
     <nav class="neighbors">
-      <% if @newer_post %>
-          Newer: <a href="<%= h router.post_url(@newer_post) %>"><%= h @newer_post.title %></a>
-      <% end %>
-      <% if @older_post %>
-          Older: <a href="<%= h router.post_url(@older_post) %>"><%= h @older_post.title %></a>
-      <% end %>
+      <ul class="neighbors__list">
+        <li class="neighbors__item">
+          <span class="neighbors__direction">Newer Post</span><br>
+          <% if @newer_post %>
+              <a href="<%= h router.post_url(@newer_post) %>"><%= h @newer_post.title %></a>
+          <% else %>
+              -
+          <% end %>
+        </li>
+        <li class="neighbors__item">
+          <span class="neighbors__direction">Older Post</span><br>
+          <% if @older_post %>
+              <a href="<%= h router.post_url(@older_post) %>"><%= h @older_post.title %></a>
+          <% else %>
+              -
+          <% end %>
+        </li>
+      </ul>
     </nav>
   </main>
   <footer class="site-footer"></footer>

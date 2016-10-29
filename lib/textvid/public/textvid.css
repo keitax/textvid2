@@ -44,3 +44,24 @@ body {
     border: solid 1pt #ccc;
     padding: 1rem;
 }
+
+.neighbors__list {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+
+}
+
+.neighbors__item {
+    list-style: none;
+    width: 50%;
+    padding-right: 1rem;
+}
+
+.neighbors__direction {
+    font-size: small;
+}
+
+.footer {
+    margin: 1rem 0 2rem;
+}
