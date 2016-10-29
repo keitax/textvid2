@@ -20,6 +20,21 @@ module Textvid
       erb :index
     end
 
+    get /(\d{4})\/(\d{2})\/(.+)\.html/ do
+      year_param, month_param, url_title = params['captures']
+      q = Query.new
+      q.start = 1
+      q.results = 1
+      q.year = year_param.to_i
+      q.month = month_param.to_i
+      q.url_title = url_title
+      posts = database.select(q)
+      unless posts.empty?
+        @post = posts.first
+        erb :post
+      end
+    end
+
     private
 
     def default_query

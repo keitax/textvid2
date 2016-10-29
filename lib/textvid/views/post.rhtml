@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <base href="<%= h settings.base_url %>">
+  <link rel="stylesheet" href="textvid.css">
+  <title><%= h settings.site_title %></title>
+</head>
+<body>
+<div class="container">
+  <header class="site-header">
+    <h1 class="site-header__title"><%= h settings.site_title %></h1>
+  </header>
+  <main class="site-main">
+    <article class="post">
+      <header class="post__header">
+        <p class="post__created-on"><%= h @post.created_at.strftime('%B %e, %Y') %></p>
+        <h1 class="post__title"><a href="<%= h router.post_url(@post) %>"><%= h @post.title %></a></h1>
+      </header>
+      <%= @post.rendered_body %>
+      <footer class="post__footer">
+        Labels:
+        <% @post.labels.each do |label| %>
+            <a href=""><%= h label %></a>
+        <% end %>
+        <%= h @post.created_at %>
+      </footer>
+    </article>
+  </main>
+  <footer class="site-footer"></footer>
+</div>
+</body>
+</html>
