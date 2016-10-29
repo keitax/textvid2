@@ -6,6 +6,10 @@ module Textvid
       @root_path = root_path
     end
 
+    def root_url
+      URI(@root_path)
+    end
+
     def post_url(post)
       if !post.url_title || post.url_title.empty?
         return URI.join(@root_path, "posts/#{post.id}") unless post.url_title

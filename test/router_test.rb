@@ -13,6 +13,10 @@ class RouterTest < Minitest::Test
     @router = Router.new('http://localhost:8000/root/')
   end
 
+  def test_root_url
+    assert_equal(URI('http://localhost:8000/root/'), @router.root_url)
+  end
+
   def test_post_url
     post_with_url_title = Post.new
     post_with_url_title.id = 1000
