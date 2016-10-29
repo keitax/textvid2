@@ -31,6 +31,17 @@ module Textvid
       p
     end
 
+    def get_neighbors(id)
+      post_ids = saved_post_ids
+      newer = nil
+      older = nil
+      if pos = post_ids.index(id)
+        newer = get(post_ids[pos - 1]) if pos - 1 >= 0
+        older = get(post_ids[pos + 1]) if pos + 1 < post_ids.length
+      end
+      [newer, older]
+    end
+
     def select(query)
       candidate_ids = saved_post_ids
       if query.year && query.month

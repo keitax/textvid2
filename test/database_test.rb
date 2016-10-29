@@ -20,6 +20,28 @@ class DatabaseTest < Minitest::Test
     assert_nil(@database.get(1), 'gets nil when no post is found')
   end
 
+  def test_get_neighbors
+    3.times do |i|
+      p = Post.new
+      p.title = "Title #{i + 1}"
+      p.body = "Body #{i + 1}"
+      p.labels = ["Label #{i + 1}"]
+      @database.insert(p)
+    end
+
+    newer, older = @database.get_neighbors(3)
+    assert_nil(newer)
+    assert_equal('Title 2', older.title)
+
+    newer, older = @database.get_neighbors(2)
+    assert_equal('Title 3', newer.title)
+    assert_equal('Title 1', older.title)
+
+    newer, older = @database.get_neighbors(1)
+    assert_equal('Title 2', newer.title)
+    assert_nil(older)
+  end
+
   def test_select
     5.times do |i|
       p = Post.new
