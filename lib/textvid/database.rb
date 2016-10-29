@@ -1,5 +1,4 @@
 require 'dbm'
-require 'json'
 require 'time'
 
 require 'textvid/entity'
@@ -19,16 +18,7 @@ module Textvid
     def get(id)
       json = @dbm[id.to_s]
       return nil unless json
-      h = JSON.parse(json)
-      p = Post.new
-      p.id = id
-      p.created_at = Time.iso8601(h['created_at']) if h['created_at']
-      p.updated_at = Time.iso8601(h['updated_at']) if h['updated_at']
-      p.title = h['title']
-      p.url_title = h['url_title']
-      p.body = h['body']
-      p.labels = h['labels']
-      p
+      Post.from_json(json)
     end
 
     def get_neighbors(id)
@@ -63,16 +53,7 @@ module Textvid
     end
 
     def update(post)
-      h = {
-          'id' => post.id,
-          'created_at' => post.created_at&.iso8601,
-          'updated_at' => post.updated_at&.iso8601,
-          'title' => post.title,
-          'url_title' => post.url_title,
-          'body' => post.body,
-          'labels' => post.labels
-      }
-      @dbm[post.dbm_key] = h.to_json
+      @dbm[post.dbm_key] = post.to_json
     end
 
     def delete(post)
