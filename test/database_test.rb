@@ -56,6 +56,24 @@ class DatabaseTest < Minitest::Test
     q.results = 2
     ps = @database.select(q)
     assert_equal([4, 3], ps.map(&:id))
+
+    q = Query.new
+    q.start = 0
+    q.results = 2
+    ps = @database.select(q)
+    assert_equal([5], ps.map(&:id))
+
+    q = Query.new
+    q.start = 5
+    q.results = 2
+    ps = @database.select(q)
+    assert_equal([1], ps.map(&:id))
+
+    q = Query.new
+    q.start = 6
+    q.results = 1
+    ps = @database.select(q)
+    assert_equal([], ps)
   end
 
   def test_select_by_month

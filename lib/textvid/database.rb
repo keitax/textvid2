@@ -42,7 +42,10 @@ module Textvid
       end
       start = (query.start || 1) - 1
       results = query.results || 5
-      post_ids = candidate_ids[start...(start + results)]
+      stop = start + results
+      start = [start, 0].max
+      start = [start, candidate_ids.length].min
+      post_ids = candidate_ids[start...stop]
       post_ids.map { |id| get(id) }
     end
 
