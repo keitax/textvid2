@@ -16,8 +16,7 @@ module Textvid
     POSTS_PER_PAGE = 5
 
     get '/' do
-      @posts = database.select(default_query)
-      erb :index
+      render_posts(default_query)
     end
 
     get '/posts/:id' do
@@ -31,6 +30,13 @@ module Textvid
       else
         pass
       end
+    end
+
+    get '/posts/' do
+      query = default_query
+      query.start = params['start'].to_i if params['start']
+      query.results = params['results'].to_i if params['results']
+      render_posts(query)
     end
 
     get /(\d{4})\/(\d{2})\/(.+)\.html/ do
@@ -50,6 +56,14 @@ module Textvid
     end
 
     private
+
+    def render_posts(query)
+      @posts = database.select(query)
+      @newer_posts = database.select(query.previous)
+      @older_posts = database.select(query.next)
+      @query = query
+      erb :index
+    end
 
     def default_query
       q = Query.new

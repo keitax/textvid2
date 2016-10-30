@@ -31,6 +31,26 @@
           </article>
       <% end %>
     </div>
+    <nav class="neighbors">
+      <ul class="neighbors__list">
+        <li class="neighbors__item">
+          <span class="neighbors__direction">Newer Post</span><br>
+          <% if @newer_posts.empty? %>
+              -
+          <% else %>
+              <a href="<%= h router.post_list_url(@query.previous) %>">Newer Posts</a>
+          <% end %>
+        </li>
+        <li class="neighbors__item">
+          <span class="neighbors__direction">Older Post</span><br>
+          <% if @older_posts.empty? %>
+              -
+          <% else %>
+              <a href="<%= h router.post_list_url(@query.next) %>">Older Posts</a>
+          <% end %>
+        </li>
+      </ul>
+    </nav>
   </main>
   <footer class="site-footer"></footer>
 </div>
