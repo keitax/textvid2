@@ -7,7 +7,7 @@ module Textvid
   class Database
     def self.create(db_dir)
       Dir.mkdir(db_dir) unless Dir.exist?(db_dir)
-      dbm = DBM.new("#{db_dir}/posts", 0644, DBM::WRCREAT)
+      dbm = DBM.new("#{db_dir}/posts", 0o644, DBM::WRCREAT)
       Database.new(dbm)
     end
 
@@ -74,7 +74,7 @@ module Textvid
         pivot = (from_l + from_r) / 2
         post = get(post_ids[pivot])
         pivot_month = [post.created_at.year, post.created_at.month]
-        if (pivot_month <=> target_month) > 0
+        if (pivot_month <=> target_month).positive?
           from_l = pivot + 1
         else
           from_r = pivot
@@ -88,7 +88,7 @@ module Textvid
         pivot = (to_l + to_r) / 2
         post = get(post_ids[pivot])
         pivot_month = [post.created_at.year, post.created_at.month]
-        if (pivot_month <=> target_month) < 0
+        if (pivot_month <=> target_month).negative?
           to_r = pivot
         else
           to_l = pivot + 1
@@ -100,9 +100,9 @@ module Textvid
     end
 
     def filter_by_url_title(post_ids, url_title)
-      post_ids.select { |id|
+      post_ids.select do |id|
         get(id).url_title == url_title
-      }
+      end
     end
 
     def saved_post_ids

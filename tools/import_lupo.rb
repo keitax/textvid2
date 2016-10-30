@@ -19,7 +19,7 @@ ORDER BY E.CREATED_AT ASC
 QUERY
 
 lupo_db.execute(query) do |row|
-  id, created_at, modified_at, day, title, body = row
+  id, created_at, modified_at, _day, title, body = row
   p = Textvid::Post.new
   p.id = id
   p.created_at = Time.parse(created_at)

@@ -8,7 +8,7 @@ module Textvid
 
     def self.from_json(json)
       h = JSON.parse(json)
-      p = self.new
+      p = new
       p.id = h['id']
       p.created_at = Time.iso8601(h['created_at']) if h['created_at']
       p.updated_at = Time.iso8601(h['updated_at']) if h['updated_at']
@@ -21,13 +21,13 @@ module Textvid
 
     def to_json
       h = {
-          'id' => @id,
-          'created_at' => @created_at&.iso8601,
-          'updated_at' => @updated_at&.iso8601,
-          'title' => @title,
-          'url_title' => @url_title,
-          'body' => @body,
-          'labels' => @labels
+        'id' => @id,
+        'created_at' => @created_at&.iso8601,
+        'updated_at' => @updated_at&.iso8601,
+        'title' => @title,
+        'url_title' => @url_title,
+        'body' => @body,
+        'labels' => @labels
       }
       h.to_json
     end

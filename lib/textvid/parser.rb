@@ -23,45 +23,17 @@ module Textvid
       while peek
         case peek
         when HN_RE
-          level = peek.slice(HN_RE, 1).length
-          body = peek.slice(HN_RE, 2)
-          out_ln("<h#{level}>#{inline(body)}</h#{level}>")
-          inc
+          parse_hn
         when UL_ITEM_RE
-          out_ln('<ul>')
-          while peek && UL_ITEM_RE =~ peek
-            body = peek.slice(UL_ITEM_RE, 2)
-            out_ln("<li>#{inline(body)}</li>")
-            inc
-          end
-          out_ln('</ul>')
+          parse_ul_item
         when OL_ITEM_RE
-          out_ln('<ol>')
-          while peek && OL_ITEM_RE =~ peek
-            body = peek.slice(OL_ITEM_RE, 2)
-            out_ln("<li>#{inline(body)}</li>")
-            inc
-          end
-          out_ln('</ol>')
+          parse_ol_item
         when CODE_RE
-          out('<pre><code>')
-          buf = []
-          while peek && CODE_RE =~ peek
-            body = peek.slice(CODE_RE, 1)
-            buf.push(body)
-            inc
-          end
-          out(ERB::Util.h(buf.join("\n")))
-          out_ln('</code></pre>')
+          parse_code
         when BLANK_RE
           inc
         else
-          out_ln('<p>')
-          while peek && p_line?(peek)
-            out_ln(inline(peek.strip))
-            inc
-          end
-          out_ln('</p>')
+          parse_paragraph
         end
       end
       @buf.rewind
@@ -69,6 +41,54 @@ module Textvid
     end
 
     private
+
+    def parse_hn
+      level = peek.slice(HN_RE, 1).length
+      body = peek.slice(HN_RE, 2)
+      out_ln("<h#{level}>#{inline(body)}</h#{level}>")
+      inc
+    end
+
+    def parse_ul_item
+      out_ln('<ul>')
+      while peek && UL_ITEM_RE =~ peek
+        body = peek.slice(UL_ITEM_RE, 2)
+        out_ln("<li>#{inline(body)}</li>")
+        inc
+      end
+      out_ln('</ul>')
+    end
+
+    def parse_ol_item
+      out_ln('<ol>')
+      while peek && OL_ITEM_RE =~ peek
+        body = peek.slice(OL_ITEM_RE, 2)
+        out_ln("<li>#{inline(body)}</li>")
+        inc
+      end
+      out_ln('</ol>')
+    end
+
+    def parse_code
+      out('<pre><code>')
+      buf = []
+      while peek && CODE_RE =~ peek
+        body = peek.slice(CODE_RE, 1)
+        buf.push(body)
+        inc
+      end
+      out(ERB::Util.h(buf.join("\n")))
+      out_ln('</code></pre>')
+    end
+
+    def parse_paragraph
+      out_ln('<p>')
+      while peek && p_line?(peek)
+        out_ln(inline(peek.strip))
+        inc
+      end
+      out_ln('</p>')
+    end
 
     EMPHASIS_RE = /\*(.+?)\*/
     STRONG_RE = /\*\*(.+?)\*\*/
@@ -88,14 +108,12 @@ module Textvid
 
     def p_line?(line)
       [
-          HN_RE,
-          UL_ITEM_RE,
-          OL_ITEM_RE,
-          BLANK_RE,
-          CODE_RE
-      ].all? { |re|
-        re !~ line
-      }
+        HN_RE,
+        UL_ITEM_RE,
+        OL_ITEM_RE,
+        BLANK_RE,
+        CODE_RE
+      ].all? { |re| re !~ line }
     end
 
     def peek

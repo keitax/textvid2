@@ -4,7 +4,7 @@ module Textvid
 
     def previous
       return nil unless @start && @results
-      q = self.dup
+      q = dup
       q.start = [1, @start - @results].max
       q.results = @start - q.start
       q
@@ -12,7 +12,7 @@ module Textvid
 
     def next
       return nil unless @start && @results
-      q = self.dup
+      q = dup
       q.start += @results
       q
     end

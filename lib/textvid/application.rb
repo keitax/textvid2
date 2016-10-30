@@ -6,7 +6,7 @@ require 'textvid/database'
 require 'textvid/query'
 
 module Textvid
-  Application = Sinatra.new {
+  Application = Sinatra.new do
     include ERB::Util
 
     extend Forwardable
@@ -39,7 +39,7 @@ module Textvid
       render_posts(query)
     end
 
-    get /(\d{4})\/(\d{2})\/(.+)\.html/ do
+    get %r<(\d{4})/(\d{2})/(.+)\.html> do
       year_param, month_param, url_title = params['captures']
       q = Query.new
       q.start = 1
@@ -71,5 +71,5 @@ module Textvid
       q.results = POSTS_PER_PAGE
       q
     end
-  }
+  end
 end
