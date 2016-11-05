@@ -6,7 +6,7 @@ require 'textvid/database'
 require 'textvid/query'
 
 module Textvid
-  Application = Sinatra.new do
+  class Application < Sinatra::Base
     include ERB::Util
 
     extend Forwardable
