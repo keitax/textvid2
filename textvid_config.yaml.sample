@@ -1,0 +1,4 @@
+textvid:
+    database_dir: 'textvid-db'
+    base_url: 'http://localhost:3000/'
+    site_title: 'Textvid Blog System'

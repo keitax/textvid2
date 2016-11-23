@@ -6,3 +6,4 @@ vendor/
 temp-db/
 .bundle
 .idea/
+textvid_config.yaml
